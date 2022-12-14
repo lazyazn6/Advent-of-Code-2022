@@ -1,0 +1,76 @@
+with open('Day9.txt') as file:
+    InputFile = [line.rstrip().split() for line in file]
+
+# InputFile[rows][0] = direction
+# int(InputFile[rows][1]) = number of moves
+#print(InputFile)
+# print(RopeKnots)
+HeadPosition = [0, 0]
+TailPosition = [0, 0]
+RopeKnots = []
+UniquePosition = []
+UniquePosition.append(TailPosition)
+
+# just need to change the number of knots variable for part 1 and part 2
+
+NumberOfKnots = 10
+for _ in range(NumberOfKnots):
+    RopeKnots.append([0, 0])
+
+
+Direction = {
+    "U": [1, 0],
+    "D": [-1, 0],
+    "L": [0, -1],
+    "R": [0, 1],
+    "DR": [-1, 1],
+    "DL": [-1, -1],
+    "UR": [1, 1],
+    "UL": [1, -1]
+}
+
+NextMove = {
+    "20": "U",
+    "-20": "D",
+    "02": "R",
+    "0-2": "L",
+    "2-1": "UL",
+    "1-2": "UL",
+    "2-2": "UL",
+    "-2-1": "DL",
+    "-1-2": "DL",
+    "-2-2": "DL",
+    "21": "UR",
+    "12": "UR",
+    "22": "UR",
+    "-21": "DR",
+    "-12": "DR",
+    "-22": "DR"
+}
+
+for Line in InputFile:
+    for x in range(int(Line[1])):
+        #print(int(Line[1]))
+        for y in range(NumberOfKnots):
+            #print(y)
+            if y == 0:
+                RopeKnots[y] = [RopeKnots[y][0] + Direction[Line[0]][0], RopeKnots[y][1] + Direction[Line[0]][1]]
+                #print("Head Position ", RopeKnots[y])
+            else:
+                # check to see if the next knot needs to move
+                Diff = str(RopeKnots[y - 1][0] - RopeKnots[y][0]) + str(RopeKnots[y - 1][1] - RopeKnots[y][1])
+                NextDir = NextMove.get(Diff)
+                # print(Diff," Next Move ", NextDir)
+                if NextDir is None:
+                    break
+                else:
+                    RopeKnots[y] = [RopeKnots[y][0] + Direction[NextDir][0], RopeKnots[y][1] + Direction[NextDir][1]]
+                    #print("Knot ", y," ",RopeKnots[y])
+                    if y == NumberOfKnots - 1:
+                        if RopeKnots[y] not in UniquePosition:
+                            UniquePosition.append(RopeKnots[y])
+                            #print(UniquePosition)
+
+        # i = i +1
+
+print(len(UniquePosition))
